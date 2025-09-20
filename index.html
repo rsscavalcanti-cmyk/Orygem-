@@ -287,7 +287,7 @@
         it2.appendChild(el('div','kv','Material: '+(oc.material||'-')+' • Aplicação: '+(oc.aplicacao||'-')));
         it2.appendChild(el('div','kv','Emissão: '+(oc.emissao||'-')+' • Previsão: '+(oc.previsao||'-')));
         it2.appendChild(el('div','kv', oc.recebido?('Recebido em '+oc.recebido):'Pendente'));
-        if(oc.obs_comprador){ it2.appendChild(el('div','kv','Obs. comprador: '+oc.obs_comprador)); }
+        if(oc.obs_comprador){ it2.appendChild(el('div','kv','Obs. comprador: '+(oc.obs_comprador))); }
         ocSec.appendChild(it2);
       }
       sList.appendChild(ocSec); sup.appendChild(sList); boardEl.appendChild(sup);
@@ -337,7 +337,7 @@
       for(var i=0;i<urls.length;i++){
         try{
           var data = await tryFetch(urls[i]);
-          setLoadState('OK');
+          setLoadState(''); // não exibir "OK" após sucesso
           return data;
         }catch(err){
           console.warn('Falha em', urls[i], err);
@@ -408,7 +408,7 @@
         var reader = new FileReader();
         reader.onload = function(){
           try{
-            hideHints(); setLoadState('OK');
+            hideHints(); setLoadState(''); // não exibir "OK" após sucesso
             var data = validateData(JSON.parse(String(reader.result||'{}')));
             initLogo(data.logo_src||'');
             render(data); renderGlobalTotals(data); setStamp();
@@ -455,4 +455,3 @@
   -->
 </body>
 </html>
-
