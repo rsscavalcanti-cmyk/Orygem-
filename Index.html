@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orygem — Quadro Kanban</title>
-  <meta name="description" content="Kanban por encarregado + Suprimentos. Títulos fixos e rolagem independente por coluna. Códigos únicos por processo. % executado e atraso por tarefa." />
+  <meta name="description" content="Kanban por encarregado + Suprimentos." />
   <style>
     :root{
       --bg:#f5f7fb; --text:#111827; --muted:#475569; --brand:#0e3a6d;
@@ -17,48 +17,42 @@
     html,body{height:100%}
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial,sans-serif;background:var(--bg);color:var(--text)}
 
-    /* ===== Header fixo ===== */
-    header{
-      position:sticky;top:0;z-index:100;
-      color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-      padding:14px 18px;box-shadow:0 2px 10px rgba(0,0,0,.18);
-      background:linear-gradient(90deg,var(--brand2) 0%, var(--brand) 100%);
-    }
+    header{position:sticky;top:0;z-index:100;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;box-shadow:0 2px 10px rgba(0,0,0,.18);background:linear-gradient(90deg,var(--brand2) 0%, var(--brand) 100%)}
     .brand{display:flex;align-items:center;gap:16px}
     .logo-box{width:164px;height:64px;background:#fff;border-radius:10px;border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;overflow:hidden}
     .logo-img{max-width:100%;max-height:100%;display:none}
     .logo-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#0f172a;font-weight:800;letter-spacing:.3px}
     h1{margin:0;font-size:24px;letter-spacing:.2px}
     .subtitle{margin-top:2px;font-size:13px;opacity:.9}
-
     .meta{ text-align:right; display:flex; flex-direction:column; gap:4px }
     .stamp{font-size:13px;font-weight:700}
     .clock{font-variant-numeric:tabular-nums;font-size:12px;opacity:.95}
 
-    /* ===== Painel e colunas ===== */
-    .board{height:calc(100vh - var(--header-h) - var(--footer-h));display:flex;gap:16px;padding:16px;overflow-x:auto;overflow-y:hidden}
-    .column{background:var(--card);border:1px solid var(--border);border-radius:10px;min-width:320px;max-width:480px;flex:1;display:flex;flex-direction:column;height:100%;overflow:hidden}
+    /* Quadro de resumo total */
+    .global-totals{margin:12px 16px 0; padding:10px 12px; background:#fff; border:1px solid var(--border); border-radius:12px; box-shadow:0 2px 6px rgba(2,6,23,.06); display:flex; flex-wrap:wrap; align-items:center; gap:10px}
+    .global-totals h3{margin:0 12px 0 0; font-size:14px}
+    .pills{display:flex; flex-wrap:wrap; gap:8px}
+    .pill{font-size:12px;background:#f1f5f9;border:1px solid var(--border);border-radius:999px;padding:6px 10px}
+
+    .board{height:calc(100vh - var(--header-h) - var(--footer-h) - 64px);display:flex;gap:16px;padding:16px;overflow-x:auto;overflow-y:hidden}
+    .column{background:var(--card);border:1px solid var(--border);border-radius:10px;min-width:320px;max-width:520px;flex:1;display:flex;flex-direction:column;height:100%;overflow:hidden}
     .column h2{position:sticky;top:0;z-index:10;margin:0;padding:12px;background:var(--header);font-size:18px;font-weight:800;text-decoration:underline;border-bottom:1px solid var(--border);text-align:center;box-shadow:0 1px 0 rgba(0,0,0,.06)}
     .list{flex:1;overflow:auto;padding:10px;overscroll-behavior:contain}
 
-    /* ===== Cards ===== */
     .task{background:#ffffff;margin:8px 0;border:1px solid var(--border);border-left:10px solid var(--border);border-radius:10px;padding:12px;box-shadow:0 2px 6px rgba(2,6,23,.06);position:relative}
     .task.overdue{border-left-color:var(--late)}
     .task.block{border-left-color:var(--block)}
     .task.exec{border-left-color:var(--exec)}
     .task.done{border-left-color:var(--ok)}
     .title{font-weight:800;margin-bottom:6px}
-    .meta-text{font-size:13px;color:var(--muted)}
+    .meta-text{font-size:13px;color:#475569}
     .chip{display:inline-block;background:var(--chip);padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;margin-left:6px}
-    .code{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:12px;background:#eef2ff;color:#0f172a;border:1px solid #c7d2fe;padding:2px 6px;border-radius:6px;margin-right:6px}
-    .delta{font-weight:700}
+    .code{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:#eef2ff;color:#0f172a;border:1px solid #c7d2fe;padding:2px 6px;border-radius:6px;margin-right:6px}
 
-    /* ===== Progresso ===== */
     .progress{margin-top:8px;background:#e5e7eb;border:1px solid #d1d5db;border-radius:999px;height:10px;overflow:hidden}
     .progress-inner{height:100%;width:0%;background:linear-gradient(90deg, #60a5fa, #22c55e);transition:width .3s ease}
     .progress-label{margin-top:4px;font-size:12px;color:#334155;display:flex;justify-content:space-between}
 
-    /* ===== Suprimentos ===== */
     .section{margin-top:6px;padding-top:6px;border-top:1px dashed var(--border)}
     .section h3{position:sticky;top:0;z-index:6;margin:0 0 6px;background:var(--header);padding:8px;border:1px solid var(--border);border-radius:8px;text-align:center;font-size:14px}
     .item{background:#ffffff;border:1px solid var(--border);border-left:8px solid var(--border);border-radius:10px;padding:10px;margin:8px 0;box-shadow:0 2px 6px rgba(2,6,23,.06);position:relative}
@@ -67,12 +61,16 @@
     .item.ok{border-left-color:var(--ok)}
     .item.recv{border-left-color:var(--recv)}
     .row{display:flex;justify-content:space-between;gap:8px;font-size:14px}
-    .kv{font-size:12px;color:var(--muted)}
+    .kv{font-size:12px;color:#64748b}
 
-    footer{
-      padding:10px 16px;border-top:1px solid var(--border);background:#fff;color:#334155;
-      font-size:12px; display:flex; justify-content:center; align-items:center; min-height:40px;
-    }
+    .crew{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .crew .pill{font-size:12px;background:#f1f5f9;border:1px solid var(--border);border-radius:999px;padding:4px 8px}
+
+    /* Totais por encarregado */
+    .enc-totals{margin:10px 0 2px;padding:10px;border:1px dashed var(--border);border-radius:10px;background:#f8fafc}
+    .enc-totals strong{display:block;margin-bottom:6px}
+
+    footer{padding:10px 16px;border-top:1px solid var(--border);background:#fff;color:#334155;font-size:12px; display:flex; justify-content:center; align-items:center; min-height:40px}
   </style>
 </head>
 <body>
@@ -90,57 +88,60 @@
     </div>
   </header>
 
-  <div class="board" id="board"></div>
+  <!-- Quadro Resumo TOTAL -->
+  <section id="globalTotals" class="global-totals" aria-live="polite">
+    <h3>Resumo total da equipe em andamento</h3>
+    <div class="pills" id="globalPills"></div>
+  </section>
 
+  <div class="board" id="board"></div>
   <footer id="ftr"></footer>
 
   <script>
   (function(){
     'use strict';
 
-    /* =================== DADOS =================== */
+    // ======= DADOS =======
     var DATA = {
-      logo_src: 'assets/logo.jpg',
+      // CORRIGIDO: nome do arquivo dentro de /assets
+      logo_src: 'assets/logo-system.jpg?v=1',
       encarregados:[
         {nome:'Severo (Hidráulica)', tarefas:[
-          {codigo:'T-0313', titulo:'Rede hidráulica de entrada de água — conclusão', prazo_esperado:'19/09/2025', status:'exec', pct:85, obs:'Madeiras e paletes no caminho obstruído (almoxarifado da Asas).'},
-          {codigo:'T-0314', titulo:'Troca do suporte da rede Ø110 mm: perfilado → cantoneira (recalque de pluviais e esgoto)', prazo_esperado:'19/09/2025', status:'exec', pct:90, obs:'Madeiras e paletes no caminho obstruído (almoxarifado da Asas).'},
-          {codigo:'T-0322', titulo:'Retrabalho de 7 caixas de rede externa, reposicionamento de tubulações e acabamento - aditivo', prazo_esperado:'26/09/2025', status:'exec', pct:10},
-          {codigo:'T-0323', titulo:'Montagem de conjuntos de bombas em 3 poços', prazo_esperado:'26/09/2025', status:'', pct:0}
+          {codigo:'T-0313', titulo:'Rede hidráulica de entrada de água — conclusão', inicio:'16/09/2025', prazo_esperado:'19/09/2025', status:'exec', pct:85, obs:'Madeiras e paletes no caminho obstruído (almoxarifado da Asas).'},
+          {codigo:'T-0314', titulo:'Troca do suporte da rede Ø110 mm: perfilado → cantoneira (recalque de pluviais e esgoto)', inicio:'16/09/2025', prazo_esperado:'19/09/2025', status:'exec', pct:90, obs:'Madeiras e paletes no caminho obstruído (almoxarifado da Asas).'},
+          {codigo:'T-0322', titulo:'Retrabalho de 7 caixas de rede externa, reposicionamento de tubulações e acabamento - aditivo', inicio:'22/09/2025', prazo_esperado:'26/09/2025', status:'exec', pct:10},
+          {codigo:'T-0323', titulo:'Montagem de conjuntos de bombas em 3 poços', inicio:'22/09/2025', prazo_esperado:'26/09/2025', status:'', pct:0}
         ]},
         {nome:'Airton (Hidráulica)', tarefas:[
-          {codigo:'T-0305', titulo:'Entrega de apartamentos para a Qualidade — Blocos 2 e 3 - 1º ao 4º pavimentos', prazo_esperado:'19/09/2025', status:'done', pct:100, data_conclusao:'19/09/2025'},
-          {codigo:'T-0306', titulo:'Instalação da redutora de pressão — 8º pavimento — Bloco 3', prazo_esperado:'19/09/2025', status:'exec', pct:50},
-          {codigo:'T-0324', titulo:'Entrega de apartamentos — 4º ao 6º pavimentos dos Blocos 2 e 3', prazo_esperado:'26/09/2025', status:'', pct:0},
-          {codigo:'T-0325', titulo:'Execução da redutora de pressão — 12º pavimento do Bloco 3', prazo_esperado:'26/09/2025', status:'', pct:0}
+          {codigo:'T-0305', titulo:'Entrega de apartamentos para a Qualidade — Blocos 2 e 3 - 1º ao 4º pavimentos', inicio:'15/09/2025', prazo_esperado:'19/09/2025', status:'done', pct:100, data_conclusao:'19/09/2025'},
+          {codigo:'T-0306', titulo:'Instalação da redutora de pressão — 8º pavimento — Bloco 3', inicio:'16/09/2025', prazo_esperado:'19/09/2025', status:'exec', pct:50},
+          {codigo:'T-0324', titulo:'Entrega de apartamentos — 4º ao 6º pavimentos dos Blocos 2 e 3', inicio:'22/09/2025', prazo_esperado:'26/09/2025', status:'', pct:0},
+          {codigo:'T-0325', titulo:'Execução da redutora de pressão — 12º pavimento do Bloco 3', inicio:'22/09/2025', prazo_esperado:'26/09/2025', status:'', pct:0}
         ]},
         {nome:'Thiago (Elétrica)', tarefas:[
-          {codigo:'T-0315', titulo:'Tratamento de todas as eletrocalhas', prazo_esperado:'19/09/2025', status:'done', pct:100, data_conclusao:'19/09/2025'},
-          {codigo:'T-0316', titulo:'Instalação de luminárias — trecho central do subsolo (±50 unidades em zonas apagadas)', prazo_esperado:'19/09/2025', status:'exec', pct:90},
-          {codigo:'T-0317', titulo:'Instalação de 5 quadros de bombas', prazo_esperado:'19/09/2025', status:'done', pct:100, data_conclusao:'18/09/2025'},
-          {codigo:'T-0321', titulo:"Instalação de CSMD's dos blocos 1, 2 e 3", prazo_esperado:'26/09/2025', status:'exec', pct:25}
+          {codigo:'T-0315', titulo:'Tratamento de todas as eletrocalhas', inicio:'15/09/2025', prazo_esperado:'19/09/2025', status:'done', pct:100, data_conclusao:'19/09/2025'},
+          {codigo:'T-0316', titulo:'Instalação de luminárias — trecho central do subsolo (±50 unidades em zonas apagadas)', inicio:'16/09/2025', prazo_esperado:'19/09/2025', status:'exec', pct:90},
+          {codigo:'T-0317', titulo:'Instalação de 5 quadros de bombas', inicio:'15/09/2025', prazo_esperado:'19/09/2025', status:'done', pct:100, data_conclusao:'18/09/2025'},
+          {codigo:'T-0321', titulo:"Instalação de CSMD's dos blocos 1, 2 e 3", inicio:'22/09/2025', prazo_esperado:'26/09/2025', status:'exec', pct:25}
         ]},
         {nome:'Marcelo (Elétrica)', tarefas:[
-          {codigo:'T-0318', titulo:'Entrega de apartamentos', prazo_esperado:'19/09/2025', status:'exec', pct:80},
-          {codigo:'T-0319', titulo:'Fechamento de QDLs dos apartamentos — 19º e 20º (duas torres)', prazo_esperado:'19/09/2025', status:'block', pct:40, obs:"Aguardando materiais (componentes para QDL's)"},
-          {codigo:'T-0320', titulo:'SPDA das duas torres (executar áreas liberadas)', prazo_esperado:'19/09/2025', status:'exec', pct:30},
-          {codigo:'T-0326', titulo:'Instalação das tampas dos barramentos blindados verticais — 3 torres', prazo_esperado:'26/09/2025', status:'', pct:0},
-          {codigo:'T-0327', titulo:'Ensaios/funcionais dos barramentos blindados', prazo_esperado:'26/09/2025', status:'', pct:0},
-          {codigo:'T-0328', titulo:'Instalação dos cofres pendentes', prazo_esperado:'26/09/2025', status:'', pct:0}
+          {codigo:'T-0318', titulo:'Entrega de apartamentos', inicio:'16/09/2025', prazo_esperado:'19/09/2025', status:'exec', pct:80},
+          {codigo:'T-0319', titulo:'Fechamento de QDLs dos apartamentos — 19º e 20º (duas torres)', inicio:'16/09/2025', prazo_esperado:'19/09/2025', status:'block', pct:40, obs:"Aguardando materiais (componentes para QDL's)"},
+          {codigo:'T-0320', titulo:'SPDA das duas torres (executar áreas liberadas)', inicio:'16/09/2025', prazo_esperado:'19/09/2025', status:'exec', pct:30},
+          {codigo:'T-0326', titulo:'Instalação das tampas dos barramentos blindados verticais — 3 torres', inicio:'22/09/2025', prazo_esperado:'26/09/2025', status:'', pct:0},
+          {codigo:'T-0327', titulo:'Ensaios/funcionais dos barramentos blindados', inicio:'22/09/2025', prazo_esperado:'26/09/2025', status:'', pct:0},
+          {codigo:'T-0328', titulo:'Instalação dos cofres pendentes', inicio:'22/09/2025', prazo_esperado:'26/09/2025', status:'', pct:0}
         ]}
       ],
-      /* =================== SUPRIMENTOS — APENAS NOVAS INFORMAÇÕES =================== */
       suprimentos:{
         compradores:['Brígida Souza','Suellen Mello','Lucas Fernandes'],
         pendencias_teams:{'Brígida Souza':0,'Suellen Mello':0,'Lucas Fernandes':0},
         requisicoes:[
           {codigo:'RQ-11305', numero:'RQ-11305', responsavel:'Brígida Souza', contrato:'Atlântico', material:'Condulete', aplicacao:'-', data:'', prazo:'', status:'Em cotação', obs:'Requisição atribuída para cotação'},
-
           {codigo:'RQ-11086', numero:'RQ-11086', responsavel:'Suellen Mello', contrato:'Atlântico', material:'Repastilhamento', aplicacao:'-', data:'', prazo:'', status:'', obs:'Fornecedor: TRIUNFO (LOC). Aguardando retorno da obra sobre disponibilidade de brocas para retirada'},
           {codigo:'RQ-11295', numero:'RQ-11295', responsavel:'Suellen Mello', contrato:'Atlântico', material:'Material de fixação', aplicacao:'-', data:'', prazo:'', status:'', obs:'OC 587 — 16/09 parcial'},
           {codigo:'RQ-11309', numero:'RQ-11309', responsavel:'Suellen Mello', contrato:'Atlântico', material:'Parafuso', aplicacao:'-', data:'', prazo:'', status:'', obs:'Fornecedor: PARAFUSOPAR. OC: system. Não chegou'},
           {codigo:'RQ-11181', numero:'RQ-11181', responsavel:'Suellen Mello', contrato:'Atlântico', material:'PVC', aplicacao:'Ralos embasamento / fechamento de bombas', data:'', prazo:'', status:'', obs:'OC 597 — 18/09 parcial'},
-
           {codigo:'RQ-10623', numero:'RQ-10623', responsavel:'Lucas Fernandes', contrato:'Atlântico', material:'Quadros de entrada de energia', aplicacao:'Entrada de energia', data:'', prazo:'', status:'', obs:'OC 009 — 09/09 parcial; restante 25/09'},
           {codigo:'RQ-11282', numero:'RQ-11282', responsavel:'Lucas Fernandes', contrato:'Atlântico', material:'Tê de fachada', aplicacao:'Fachada', data:'', prazo:'', status:'', obs:'OC 591 — não chegou'},
           {codigo:'RQ-11237', numero:'RQ-11237', responsavel:'Lucas Fernandes', contrato:'Atlântico', material:'Fitas isolantes', aplicacao:'Elétrica força e distribuição', data:'', prazo:'', status:'', obs:'OC 585 — chegou 16/09'},
@@ -163,16 +164,11 @@
       }
     };
 
-    /* ==== Datas, ordenação e helpers ==== */
+    // ===== Helpers =====
     var DAY=86400000, HOUR=36e5;
     function parseBRDate(s){ if(!s) return null; var a=s.split('/'); if(a.length!==3) return null; var d=+a[0],m=+a[1],y=+a[2]; var dt=new Date(y,m-1,d,12,0,0); return isNaN(dt)?null:dt }
-    function diffDays(a,b){ return Math.round((a-b)/DAY) }
     function fmtClock(){ var t=new Date(); var pad=n=>String(n).padStart(2,'0'); return pad(t.getHours())+':'+pad(t.getMinutes())+':'+pad(t.getSeconds()) }
-
-    // Helpers genéricos p/ pegar datas em tarefas e suprimentos
     function getDueDate(t){ return parseBRDate(t.prazo_esperado||t.prazo||t.previsao||t.data||''); }
-    function getDoneDate(t){ return parseBRDate(t.data_conclusao||t.finalizado_em||''); }
-
     function dLabel(dateStr){ var d=parseBRDate(dateStr); if(!d) return ''; var delta=Math.floor((d-new Date())/DAY); if(delta===0) return 'D-0'; return (delta>0)?('D-'+delta):('D+'+Math.abs(delta)) }
     function urgencyByDate(dateStr,status){ if(status==='done'||status==='FINALIZADA')return'done'; if(status==='block')return'block'; if(status==='exec')return'exec'; if(status==='recebido')return'recv'; var d=parseBRDate(dateStr); if(!d)return'ok'; var h=(d-new Date())/HOUR; if(h<=0)return'overdue'; if(h<=48)return'soon'; return'ok' }
     function weightStatus(s){ if(s==='done'||s==='FINALIZADA')return-2; return 0 }
@@ -180,8 +176,7 @@
     function compareByPrazo(a,b){
       var wa=weightStatus(a.status),wb=weightStatus(b.status); if(wa!==wb)return wa-wb;
       if((a.status==='done'||a.status==='FINALIZADA')&&(b.status==='done'||b.status==='FINALIZADA')){
-        var da=getDoneDate(a), db=getDoneDate(b);
-        if(da&&db)return db-da; if(da&&!db)return-1; if(!da&&db)return 1; return 0 }
+        var da=getDueDate(a), db=getDueDate(b); if(da&&db)return db-da; if(da&&!db)return-1; if(!da&&db)return 1; return 0 }
       var ua=weightUrgencyByDate(a.prazo_esperado||a.prazo||a.previsao||a.data||''), ub=weightUrgencyByDate(b.prazo_esperado||b.prazo||b.previsao||b.data||'');
       if(ua!==ub)return ua-ub;
       var da2=getDueDate(a), db2=getDueDate(b);
@@ -192,100 +187,120 @@
         if(da&&db)return db-da; if(da&&!db)return-1; if(!da&&db)return 1; return 0 }
       return compareByPrazo({status:a.status,prazo:a.previsao},{status:b.status,prazo:b.previsao}) }
 
-    function deltaConclusaoDias(t){
-      var due=getDueDate(t), done=getDoneDate(t);
-      if(!due || !done) return null;
-      return Math.round((done - due)/86400000); // + = atraso, - = adiantado
+    function inferTipo(encNome, titulo){ var n=(encNome||'').toLowerCase(); var tt=(titulo||'').toLowerCase(); if(n.includes('elétrica')||/qdl|lumin|eletrocalha|spda|barramento|csmd|quadro|cofre/.test(tt)) return 'eletrica'; if(n.includes('hidráulica')||/bomba|ralo|pvc|rede|hidr|redutora|tubula|esgoto|pluvial|água/.test(tt)) return 'hidraulica'; return 'apoio'; }
+    function defaultTeam(tipo){ if(tipo==='eletrica') return {eletricistas:2, ajudantes:1}; if(tipo==='hidraulica') return {bombeiros:2, ajudantes:1, pedreiros:0}; return {pedreiros:1, ajudantes:1}; }
+
+    function sumTeams(sum, team){
+      sum.eletricistas = (sum.eletricistas||0) + (team.eletricistas||0);
+      sum.bombeiros    = (sum.bombeiros||0) + (team.bombeiros||0);
+      sum.pedreiros    = (sum.pedreiros||0) + (team.pedreiros||0);
+      sum.ajudantes    = (sum.ajudantes||0) + (team.ajudantes||0);
+      return sum;
     }
 
-    /* =================== DOM =================== */
+    // ===== DOM =====
     function el(tag,cls,text){ var e=document.createElement(tag); if(cls)e.className=cls; if(text!=null)e.textContent=text; return e }
     var boardEl=document.getElementById('board');
 
+    function renderGlobalTotals(){
+      var totals={eletricistas:0,bombeiros:0,pedreiros:0,ajudantes:0};
+      for(var i=0;i<DATA.encarregados.length;i++){
+        var enc=DATA.encarregados[i];
+        var tasks=enc.tarefas||[];
+        for(var j=0;j<tasks.length;j++){
+          var t=tasks[j];
+          if(t.status==='exec' || t.status==='block'){
+            var tipo=inferTipo(enc.nome,t.titulo);
+            var equipe=t.equipe||defaultTeam(tipo);
+            totals=sumTeams(totals,equipe);
+          }
+        }
+      }
+      var pills=document.getElementById('globalPills');
+      pills.innerHTML='';
+      function pill(label,val){ if(val>0) pills.appendChild(el('span','pill', label+': '+val)); }
+      pill('Eletricistas', totals.eletricistas);
+      pill('Bombeiros hidr.', totals.bombeiros);
+      pill('Pedreiros', totals.pedreiros);
+      pill('Ajudantes', totals.ajudantes);
+    }
+
     function render(){
       boardEl.innerHTML='';
-
-      // === Colunas por Encarregado ===
       for(var i=0;i<DATA.encarregados.length;i++){
         var enc=DATA.encarregados[i];
         var tasks=(enc.tarefas||[]).slice().sort(compareByPrazo);
-        var col=el('section','column');
-        col.appendChild(el('h2','',enc.nome));
+        var col=el('section','column'); col.appendChild(el('h2','',enc.nome));
         var list=el('div','list');
 
+        var runningTotals = {eletricistas:0,bombeiros:0,pedreiros:0,ajudantes:0};
+
         for(var j=0;j<tasks.length;j++){
-          var t=tasks[j];
-          var dueStr=t.prazo_esperado||t.prazo||'';
-          var cls=urgencyByDate(dueStr,t.status);
+          var t=tasks[j]; var dueStr=t.prazo_esperado||t.prazo||''; var cls=urgencyByDate(dueStr,t.status);
           var card=el('div','task '+cls);
 
-          var code=el('span','code','#'+(t.codigo||''));
-          var title=el('span','title'); title.textContent=t.titulo;
-          var header=el('div'); header.appendChild(code); header.appendChild(title);
+          var code=el('span','code','#'+(t.codigo||'')); var title=el('span','title',t.titulo); var header=el('div'); header.appendChild(code); header.appendChild(title);
 
           var meta=el('div','meta-text');
-          var partes=[];
-          var label1='Prazo esperado: '+(dueStr||'-');
-          if(!(t.status==='done'||t.status==='FINALIZADA')) label1 += ' • '+dLabel(dueStr||'');
-          partes.push(label1);
+          var linhas=[]; var label1='Prazo esperado: '+(dueStr||'-'); if(!(t.status==='done'||t.status==='FINALIZADA')) label1+=' • '+dLabel(dueStr||''); linhas.push(label1);
+          if(t.data_conclusao||t.finalizado_em){ linhas.push('Data de conclusão: '+(t.data_conclusao||t.finalizado_em)); }
+          if(t.obs){ linhas.push('Obs.: '+t.obs); }
+          meta.innerHTML=linhas.map(function(p){return '<div>'+p+'</div>';}).join('');
 
-          if(t.data_conclusao||t.finalizado_em){
-            partes.push('Data de conclusão: '+(t.data_conclusao||t.finalizado_em));
+          var statusLabel='Pendente'; if(t.status==='exec')statusLabel='Em execução'; else if(t.status==='block')statusLabel='Bloqueada'; else if(t.status==='done'||t.status==='FINALIZADA')statusLabel='Finalizada 🏆'; else if(cls==='overdue')statusLabel='Atrasada'; meta.appendChild(el('span','chip',statusLabel));
+
+          // Equipe (inferida, com override por t.equipe)
+          var tipo=inferTipo(enc.nome,t.titulo); var equipe=t.equipe||defaultTeam(tipo);
+          var crew=el('div','crew');
+          function addPill(label,q){ if(q>0) crew.appendChild(el('span','pill', label+': '+q)); }
+          addPill('Eletricistas',equipe.eletricistas||0); addPill('Bombeiros hidr.',equipe.bombeiros||0); addPill('Pedreiros',equipe.pedreiros||0); addPill('Ajudantes',equipe.ajudantes||0);
+
+          // Acumular totais somente para tarefas em andamento
+          if(t.status==='exec' || t.status==='block'){
+            runningTotals = sumTeams(runningTotals, equipe);
           }
-          var dlt=deltaConclusaoDias(t);
-          if(dlt!==null){
-            var sinal = dlt>0?'+': (dlt<0?'-':'±');
-            var legenda = dlt>0? ' (atraso)': (dlt<0? ' (adiantado)':' (no prazo)');
-            partes.push('Diferença: '+sinal+Math.abs(dlt)+'d'+legenda);
-          }
-          if(t.obs){ partes.push('Obs.: '+t.obs); }
-
-          meta.innerHTML = partes.map(function(p){return '<div>'+p+'</div>';}).join('');
-
-          var statusLabel='Pendente';
-          if(t.status==='exec')statusLabel='Em execução';
-          else if(t.status==='block')statusLabel='Bloqueada';
-          else if(t.status==='done'||t.status==='FINALIZADA')statusLabel='Finalizada 🏆';
-          else if(cls==='overdue')statusLabel='Atrasada';
-          var chip=el('span','chip',statusLabel);
-          meta.appendChild(chip);
 
           var pct=Math.max(0,Math.min(100,Number(t.pct||0)));
           var pWrap=el('div','progress'); var pBar=el('div','progress-inner'); pBar.style.width=pct+'%'; pWrap.appendChild(pBar);
           var pLabel=el('div','progress-label'); pLabel.appendChild(el('span','', 'Avanço: '+pct+'%'));
-          pLabel.appendChild(el('span','', (cls==='overdue'?'⚠️ atenção ao prazo':'')));
+          if(cls==='overdue') pLabel.appendChild(el('span','', '⚠️ atenção ao prazo'));
 
-          card.appendChild(header);
-          card.appendChild(meta);
-          card.appendChild(pWrap); card.appendChild(pLabel);
+          card.appendChild(header); card.appendChild(meta); card.appendChild(crew); card.appendChild(pWrap); card.appendChild(pLabel);
           list.appendChild(card);
         }
+
+        // Resumo por encarregado (em andamento)
+        var totalsBox = el('div','enc-totals');
+        totalsBox.appendChild(el('strong','', 'Resumo — equipe em andamento'));
+        var pills = el('div','crew');
+        function pill(label,val){ if(val>0) pills.appendChild(el('span','pill', label+': '+val)); }
+        pill('Eletricistas', runningTotals.eletricistas);
+        pill('Bombeiros hidr.', runningTotals.bombeiros);
+        pill('Pedreiros', runningTotals.pedreiros);
+        pill('Ajudantes', runningTotals.ajudantes);
+        totalsBox.appendChild(pills);
+        list.appendChild(totalsBox);
 
         col.appendChild(list); boardEl.appendChild(col);
       }
 
-      // === Coluna Suprimentos ===
+      // === SUPRIMENTOS ===
       var sup=el('section','column'); sup.appendChild(el('h2','','Suprimentos')); var sList=el('div','list');
 
       // Requisições
       var rqSec=el('div','section'); rqSec.appendChild(el('h3','', 'Requisições em Aberto'));
-      var rqs=(DATA.suprimentos.requisicoes||[]).slice().sort(function(a,b){
-        return compareByPrazo({status:a.status,prazo:a.prazo,finalizado_em:a.finalizado_em},{status:b.status,prazo:b.prazo,finalizado_em:b.finalizado_em});
-      });
+      var rqs=(DATA.suprimentos.requisicoes||[]).slice();
+      function parseBRDateLocal(s){ if(!s) return null; var a=s.split('/'); if(a.length!==3) return null; return new Date(+a[2],+a[1]-1,+a[0],12,0,0); }
+      function urgencyByDateLocal(dateStr,status){ if(status==='done'||status==='FINALIZADA')return'done'; var d=parseBRDateLocal(dateStr); if(!d)return'ok'; var h=(d-new Date())/HOUR; if(h<=0)return'overdue'; if(h<=48)return'soon'; return'ok' }
       for(var r=0;r<rqs.length;r++){
-        var rq=rqs[r]; var dtPrazo=parseBRDate(rq.prazo); var dtData=parseBRDate(rq.data);
-        var lt=(dtPrazo&&dtData)?(Math.round((dtPrazo-dtData)/86400000)+'d'):'-';
-        var clsRq=urgencyByDate(rq.prazo,rq.status);
+        var rq=rqs[r]; var clsRq=urgencyByDateLocal(rq.prazo,rq.status);
         var it=el('div','item '+clsRq);
-
-        var rowTop=el('div','row');
-        var left=el('div'); left.appendChild(el('span','code','#'+(rq.codigo||rq.numero||''))); left.appendChild(el('strong','',rq.numero||rq.codigo||'RQ'));
+        var rowTop=el('div','row'); var left=el('div'); left.appendChild(el('span','code','#'+(rq.codigo||rq.numero||''))); left.appendChild(el('strong','',rq.numero||rq.codigo||'RQ'));
         rowTop.appendChild(left); rowTop.appendChild(el('span','',rq.status||''));
-
-        var kv1=el('div','kv','Data: '+(rq.data||'-')+' • Prazo: '+(rq.prazo||'-')+' • Lead time esperado: '+lt);
-        var kv2=el('div','kv','Responsável: '+(rq.responsavel||'-')+' • Contrato: '+(rq.contrato||'-')+' • Material: '+(rq.material||'-'));
-        var kv3=el('div','kv','Aplicação: '+(rq.aplicacao||'-')+' • Obs.: '+(rq.obs||'-'));
-        it.appendChild(rowTop); it.appendChild(kv1); it.appendChild(kv2); it.appendChild(kv3);
+        it.appendChild(rowTop);
+        it.appendChild(el('div','kv','Data: '+(rq.data||'-')+' • Prazo: '+(rq.prazo||'-')));
+        it.appendChild(el('div','kv','Responsável: '+(rq.responsavel||'-')+' • Contrato: '+(rq.contrato||'-')+' • Material: '+(rq.material||'-')));
+        it.appendChild(el('div','kv','Aplicação: '+(rq.aplicacao||'-')+' • Obs.: '+(rq.obs||'-')));
         if(rq.obs_comprador){ it.appendChild(el('div','kv','Obs. comprador: '+rq.obs_comprador)); }
         rqSec.appendChild(it);
       }
@@ -293,42 +308,34 @@
 
       // OCs
       var ocSec=el('div','section'); ocSec.appendChild(el('h3','', 'Ordens de Compra (OC)'));
-      var ocs=(DATA.suprimentos.ocs||[]).slice().sort(compareOC);
+      var ocs=(DATA.suprimentos.ocs||[]).slice();
+      function urgencyOC(oc){ if(oc.recebido) return 'recv'; return urgencyByDate(oc.previsao, oc.status); }
       for(var o=0;o<ocs.length;o++){
-        var oc=ocs[o];
-        var dtRec=parseBRDate(oc.recebido); var dtEmi=parseBRDate(oc.emissao);
-        var ltReal=(dtRec&&dtEmi)?(Math.round((dtRec-dtEmi)/86400000)+'d'):'-';
-        var clsOc=oc.recebido?'recv':urgencyByDate(oc.previsao,oc.status);
-        var it2=el('div','item '+clsOc);
-
-        var rowTop2=el('div','row'); var left2=el('div');
-        left2.appendChild(el('span','code','#'+(oc.codigo||oc.numero||''))); left2.appendChild(el('strong','',oc.numero||oc.codigo||'OC'));
-        rowTop2.appendChild(left2); rowTop2.appendChild(el('span','',oc.status||''));
-
-        var kv3=el('div','kv','Fornecedor: '+(oc.fornecedor||'-')+' • Comprador: '+(oc.comprador||'-')+' • Origem: '+(oc.origem_rq||'-'));
-        var kv4=el('div','kv','Material: '+(oc.material||'-')+' • Aplicação: '+(oc.aplicacao||'-'));
-        var kv5=el('div','kv','Emissão: '+(oc.emissao||'-')+' • Previsão: '+(oc.previsao||'-')+' • Lead time real: '+ltReal);
-        var st=el('div','kv', oc.recebido?('Recebido em '+oc.recebido):'Pendente');
-        it2.appendChild(rowTop2); it2.appendChild(kv3); it2.appendChild(kv4); it2.appendChild(kv5); it2.appendChild(st);
+        var oc=ocs[o]; var it2=el('div','item '+urgencyOC(oc));
+        var rowTop2=el('div','row'); var left2=el('div'); left2.appendChild(el('span','code','#'+(oc.codigo||oc.numero||''))); left2.appendChild(el('strong','',oc.numero||oc.codigo||'OC'));
+        rowTop2.appendChild(left2); rowTop2.appendChild(el('span','',oc.status||'')); it2.appendChild(rowTop2);
+        it2.appendChild(el('div','kv','Fornecedor: '+(oc.fornecedor||'-')+' • Comprador: '+(oc.comprador||'-')+' • Origem: '+(oc.origem_rq||'-')));
+        it2.appendChild(el('div','kv','Material: '+(oc.material||'-')+' • Aplicação: '+(oc.aplicacao||'-')));
+        it2.appendChild(el('div','kv','Emissão: '+(oc.emissao||'-')+' • Previsão: '+(oc.previsao||'-')));
+        it2.appendChild(el('div','kv', oc.recebido?('Recebido em '+oc.recebido):'Pendente'));
         if(oc.obs_comprador){ it2.appendChild(el('div','kv','Obs. comprador: '+oc.obs_comprador)); }
         ocSec.appendChild(it2);
       }
-      sList.appendChild(ocSec);
-      sup.appendChild(sList); boardEl.appendChild(sup);
+      sList.appendChild(ocSec); sup.appendChild(sList); boardEl.appendChild(sup);
     }
 
+    // ===== Header/Footer util =====
     function initLogo(){ var img=document.getElementById('logo'); var ph=document.getElementById('logoPh'); var src=DATA.logo_src||''; if(!src){img.style.display='none'; ph.style.display='flex'; return;} img.onload=function(){img.style.display='block'; ph.style.display='none';}; img.onerror=function(){img.style.display='none'; ph.style.display='flex';}; img.src=src; }
-
+    function fmtStampDate(d){ var pad=n=>String(n).padStart(2,'0'); return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes()); }
     function tick(){ document.getElementById('clock').textContent = fmtClock(); }
-    function updateHeaderHeights(){ var h = document.getElementById('hdr').offsetHeight || 112; document.documentElement.style.setProperty('--header-h', h + 'px'); }
-    function setStamp(){ var d = new Date(); var pad=n=>String(n).padStart(2,'0'); var stamp = 'Quadro atualizado pela engenharia em ' + pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes()); document.getElementById('stamp').textContent = stamp; }
-    function setFooterNote(){ var d = new Date(); var pad=n=>String(n).padStart(2,'0'); document.getElementById('ftr').textContent = 'Código atualizado pela engenharia em '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' às '+pad(d.getHours())+':'+pad(d.getMinutes()); }
+    function updateHeaderHeights(){ var h=document.getElementById('hdr').offsetHeight||112; document.documentElement.style.setProperty('--header-h',h+'px'); }
+    function setStamp(){ var d=new Date(); document.getElementById('stamp').textContent='Quadro atualizado pela engenharia em '+fmtStampDate(d); }
 
     document.addEventListener('DOMContentLoaded', function(){
       initLogo();
       render();
+      renderGlobalTotals();
       setStamp();
-      setFooterNote();
       updateHeaderHeights();
       tick();
       setInterval(tick, 1000);
