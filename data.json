@@ -1,0 +1,109 @@
+{
+  "logo_src": "assets/logo_iconyc.jpg",
+  "encarregados": [
+    {
+      "nome": "Rogério (Hidráulica)",
+      "tarefas": [
+        {
+          "codigo": "X-0101",
+          "titulo": "Teste de estanqueidade — barrilete superior",
+          "inicio": "18/09/2025",
+          "prazo_esperado": "20/09/2025",
+          "status": "exec",
+          "pct": 70
+        },
+        {
+          "codigo": "X-0102",
+          "titulo": "Instalação de válvulas redutoras — Bloco A (8º andar)",
+          "inicio": "19/09/2025",
+          "prazo_esperado": "23/09/2025",
+          "status": "",
+          "pct": 0
+        }
+      ]
+    },
+    {
+      "nome": "Karina (Elétrica)",
+      "tarefas": [
+        {
+          "codigo": "E-0201",
+          "titulo": "Fechamento de QDLs — 5º ao 7º",
+          "inicio": "17/09/2025",
+          "prazo_esperado": "19/09/2025",
+          "status": "done",
+          "pct": 100,
+          "data_conclusao": "19/09/2025"
+        },
+        {
+          "codigo": "E-0202",
+          "titulo": "Lançamento de cabos de dados — torres A/B (subsolo)",
+          "inicio": "19/09/2025",
+          "prazo_esperado": "24/09/2025",
+          "status": "exec",
+          "pct": 35,
+          "obs": "Aguardando liberação de trecho da calha central."
+        }
+      ]
+    }
+  ],
+  "suprimentos": {
+    "compradores": ["Juliana Prado", "Henrique Lopes"],
+    "pendencias_teams": { "Juliana Prado": 0, "Henrique Lopes": 0 },
+    "requisicoes": [
+      {
+        "codigo": "RQ-22011",
+        "numero": "RQ-22011",
+        "responsavel": "Juliana Prado",
+        "contrato": "Iconyc",
+        "material": "Conexões PPR Ø50",
+        "aplicacao": "Barrilete A",
+        "data": "",
+        "prazo": "",
+        "status": "Em cotação",
+        "obs": "Aguardando 2ª proposta"
+      },
+      {
+        "codigo": "RQ-22018",
+        "numero": "RQ-22018",
+        "responsavel": "Henrique Lopes",
+        "contrato": "Iconyc",
+        "material": "Disjuntores curva C 32A",
+        "aplicacao": "QDLs 5º–7º",
+        "data": "",
+        "prazo": "",
+        "status": "",
+        "obs": "Prioridade média"
+      }
+    ],
+    "ocs": [
+      {
+        "codigo": "OC-2103",
+        "numero": "OC-2103",
+        "emissao": "",
+        "fornecedor": "EletroCenter RJ",
+        "status": "EMITIDA",
+        "previsao": "23/09/2025",
+        "comprador": "Henrique",
+        "recebido": "",
+        "origem_rq": "RQ-22018",
+        "material": "Disjuntores 32A",
+        "aplicacao": "QDLs",
+        "obs_comprador": "Entrega única"
+      },
+      {
+        "codigo": "OC-2097",
+        "numero": "OC-2097",
+        "emissao": "",
+        "fornecedor": "HidroSul",
+        "status": "recebido",
+        "previsao": "",
+        "comprador": "Juliana",
+        "recebido": "18/09/2025",
+        "origem_rq": "RQ-22011",
+        "material": "Conexões PPR",
+        "aplicacao": "Barrilete",
+        "obs_comprador": "Chegou completo"
+      }
+    ]
+  }
+}
