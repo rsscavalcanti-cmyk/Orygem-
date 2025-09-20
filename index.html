@@ -95,10 +95,7 @@
       </div>
     </div>
     <div class="meta">
-      <div class="toolbar">
-        <button id="btnReload" class="btn" title="Recarregar dados">Recarregar JSON</button>
-        <span id="loadState" class="clock"></span>
-      </div>
+      <div class="toolbar"><span id="loadState" class="clock"></span></div>
       <div class="stamp" id="stamp">Quadro atualizado em --/--/---- --:--</div>
       <div class="clock" id="clock">--:--:--</div>
     </div>
@@ -403,9 +400,7 @@
 
     // ===== Eventos =====
     document.addEventListener('DOMContentLoaded', function(){
-      boot();
-      document.getElementById('btnReload').addEventListener('click', boot);
-      document.getElementById('btnTests').addEventListener('click', runTests);
+      boot();document.getElementById('btnTests').addEventListener('click', runTests);
       window.addEventListener('resize', updateHeaderHeights);
       // Upload local (quando file:// ou para testes)
       document.getElementById('fileInput').addEventListener('change', function(ev){
@@ -460,3 +455,4 @@
   -->
 </body>
 </html>
+
